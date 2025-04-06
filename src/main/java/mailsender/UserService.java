@@ -28,6 +28,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    private UserRegisterRequests userRegisterRequests = new UserRegisterRequests();
 
    
     public boolean initiateUserRegistration(UserRegisterRequests registerRequest, HttpSession session) {
@@ -36,6 +38,10 @@ public class UserService {
             return false;  
         }
 
+        
+        userRegisterRequests.setName(registerRequest.getName());
+        userRegisterRequests.setEmail(registerRequest.getEmail());
+        userRegisterRequests.setPassword(registerRequest.getPassword());
         
         String generatedCode = generateVerificationCode();
 
@@ -66,9 +72,9 @@ public class UserService {
         if (generatedCode.equals(verificationRequest.getVerificationCode())) {
             
             User user = new User();
-            user.setName(verificationRequest.getEmail()); 
-            user.setEmail(verificationRequest.getEmail());
-            user.setPassword(verificationRequest.getEmail()); 
+            user.setName(userRegisterRequests.getName()); 
+            user.setEmail(userRegisterRequests.getEmail());
+            user.setPassword(userRegisterRequests.getPassword()); 
 
             userRepository.save(user);
 
